@@ -15,7 +15,8 @@ class TopHeader extends Component {
           </TouchableOpacity>
         </Left>
         <Body>
-          <Text style={styles.text}>{this.props.title}</Text>
+          <Text style={styles.text } numberOfLines={1} >{this.props.title}</Text>
+          
         </Body>
         <Right />
       </Header>
@@ -29,8 +30,9 @@ const styles = StyleSheet.create({
     width: "100%",
   },
   text: {
-      fontSize: 18,
-      color: '#fff'
+      fontSize: 15,
+      color: '#fff',
+      textAlign: 'center'
   }
 });
 
