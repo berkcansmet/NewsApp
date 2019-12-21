@@ -1,41 +1,52 @@
 import React, { Component } from 'react';
-import {StyleSheet} from 'react-native';
-import { Container, Header, Content, List, ListItem, Thumbnail, Text, Left, Body, Right, Button} from 'native-base';
-class CategoriesTabs extends Component {
+import {
+  View,
+  Text,
+  StyleSheet,
+  ImageBackground,
+  Dimensions,
+  TouchableOpacity,
+} from "react-native";
+import { Fonts } from "../Helpers/Fonts";
+
+class CategoriesTab extends Component {
   render() {
     return (
-      <Container>
-
-        <Content>
-          <List>
-            <ListItem thumbnail>
-              <Left>
-                <Thumbnail square source={{ uri:'https://images.unsplash.com/photo-1537815749002-de6a533c64db?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=545&q=80' }} />
-              </Left>
-              <Body>
-                <Text>{this.props.title}</Text>
-                <Text note numberOfLines={1}>Its time to build a difference . .</Text>
-              </Body>
-              <Right>
-                <Button transparent>
-                  <Text>View</Text>
-                </Button>
-              </Right>
-            </ListItem>
-          </List>
-        </Content>
-      </Container>
-    );
+        <ImageBackground
+          style={styles.ImageBackground}
+          source={{ uri: this.props.img }}
+        >
+          <View style={styles.Headline}>
+            <Text style={styles.Text}>{this.props.title}</Text>
+          </View>
+        </ImageBackground>
+    )
   }
 }
+
+// define your styles
 const styles = StyleSheet.create({
-  container: {
-    flex:1,
-    justifyContent: "center",
+  ImageBackground: {
+    marginHorizontal: 5,
+    width: Dimensions.get("window").width,
+    height: 200,
+    borderRadius: 60,
+  },
+  Headline: {
+    justifyContent: "flex-end",
     alignItems: "center",
-    backgroundColor: "#fff",
+    height: 200,
+    flex: 1,
+    backgroundColor: "transparent",
+    color: "white",
+  },
+  Text: {
+    fontSize: 20,
+    color: "white",
+    textAlign: "center",
+    backgroundColor: "rgba(0,0,0,0.3)",
+    fontFamily: Fonts.Bold,
   },
 });
 
-//make this component available to the app
-export default CategoriesTabs;
+export default CategoriesTab;

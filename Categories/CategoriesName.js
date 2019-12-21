@@ -1,9 +1,9 @@
 //import liraries
-import React, { Component } from 'react';
 import axios from "axios";
-import {StyleSheet,Text} from 'react-native';
-import { Container, Header, Tab, Tabs, ScrollableTab } from 'native-base';
-import CategoriesTab from './CategoriesTab';
+import { Container, Tab, Tabs, ScrollableTab } from "native-base";
+import React, { Component } from "react";
+import { StyleSheet } from "react-native";
+import CategoriesTab from "./CategoriesTab";
 // create a component
 class CategoriesName extends Component {
   constructor(props) {
@@ -11,6 +11,7 @@ class CategoriesName extends Component {
     this.state = {
       name: null,
       images: null,
+      name2 : null,
     };
 
     this.getReqestAxios();
@@ -19,11 +20,17 @@ class CategoriesName extends Component {
   async getReqestAxios() {
     try {
       await axios
-        .get("http://bomba32isdunyasi.com/wp-json/wp/v2/posts?categories="+this.props.id)
+        .get(
+          "http://bomba32isdunyasi.com/wp-json/wp/v2/posts?categories="+ this.props.id)
         .then(async res => {
+           
           this.setState({
             name: res.data,
+            name2: res.data[0].id
           });
+            
+            console.log("Tabs Name", this.state.name2);
+            
           this.getMedias();
         })
         .catch(async err => {
@@ -36,7 +43,7 @@ class CategoriesName extends Component {
 
   getMedias = async () => {
     axios
-      .get("http://bomba32isdunyasi.com/wp-json/wp/v2/media")
+      .get("http://bomba32isdunyasi.com/wp-json/wp/v2/media?parent=" + this.state.name2)
       .then(async res => {
         this.setState({
           images: res.data,
@@ -44,17 +51,18 @@ class CategoriesName extends Component {
       });
   };
 
-  renderName= () => {
+  renderName = () => {
     var name = this.state.name;
+    var name2 = this.state.name2;
     var images = this.state.images;
-    if (name && images) {
+    if (name && name2 && images) {
       return name.map((data, index) => {
-        console.log("IMAGES", images);
+        console.log("IMg", images);
         return (
           <CategoriesTab
             key={index}
             id={data.id}
-            img={images[index].source_url}
+            img={data.guid.rendered}
             detail={data.content.rendered}
             title={data.title.rendered}
             date={data.date}
@@ -63,14 +71,12 @@ class CategoriesName extends Component {
       });
     }
   };
-    render() {
-        return (
-            <Container>
-        <Tabs renderTabBar={()=> <ScrollableTab />}>
+  render() {
+    return (
+      <Container>
+        <Tabs renderTabBar={() => <ScrollableTab />}>
           <Tab heading={this.props.name}>
-            <CategoriesTab>
-             {this.renderName()}
-            </CategoriesTab>
+            <CategoriesTab>{this.renderName()}</CategoriesTab>
           </Tab>
         </Tabs>
       </Container>
@@ -80,11 +86,11 @@ class CategoriesName extends Component {
 
 // define your styles
 const styles = StyleSheet.create({
-    container: {
-        justifyContent: 'center',
-        alignItems: 'center',
-        backgroundColor: 'red',
-    },
+  container: {
+    justifyContent: "center",
+    alignItems: "center",
+    backgroundColor: "red",
+  },
 });
 
 //make this component available to the app

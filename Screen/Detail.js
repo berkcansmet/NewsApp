@@ -40,7 +40,7 @@ class Detay extends Component {
         <Image style={styles.image} source={{ uri: this.props.img }} />
         <Content style={{ marginHorizontal: 10 }}>
           <View style={styles.icon}>
-            <View style={{ flexDirection: 'row' }}>
+            <View style={{ flexDirection: "row" }}>
               <Icon name="calendar" size={30} />
               <Time time={this.props.date} />
             </View>
@@ -80,7 +80,7 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     borderBottomColor: "black",
     borderBottomWidth: 1,
-    padding: 10
+    padding: 10,
   },
 });
 

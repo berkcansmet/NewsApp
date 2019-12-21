@@ -2,8 +2,8 @@
 import { Header, Right, Left, Body } from "native-base";
 import React, { Component } from "react";
 import { Text, StyleSheet, TouchableOpacity } from "react-native";
+import { Actions } from "react-native-router-flux";
 import Icon from "react-native-vector-icons/FontAwesome";
-import {Actions} from 'react-native-router-flux'
 // create a component
 class TopHeader extends Component {
   render() {
@@ -15,8 +15,9 @@ class TopHeader extends Component {
           </TouchableOpacity>
         </Left>
         <Body>
-          <Text style={styles.text } numberOfLines={1} >{this.props.title}</Text>
-          
+          <Text style={styles.text} numberOfLines={1}>
+            {this.props.title}
+          </Text>
         </Body>
         <Right />
       </Header>
@@ -30,10 +31,10 @@ const styles = StyleSheet.create({
     width: "100%",
   },
   text: {
-      fontSize: 15,
-      color: '#fff',
-      textAlign: 'center'
-  }
+    fontSize: 15,
+    color: "#fff",
+    textAlign: "center",
+  },
 });
 
 //make this component available to the app

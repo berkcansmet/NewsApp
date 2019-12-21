@@ -1,12 +1,19 @@
 //import liraries
 import axios from "axios";
-import React, { Component } from "react";
+import { Container, Content } from "native-base";
+import React, { Component , createRef} from "react";
 import { View, StyleSheet, ScrollView } from "react-native";
-import { Container, Content} from 'native-base';
-import Headline from "../Components/Headline";
-import PageHeader from "../Components/PageHeader";
+import ScalingDrawer from 'react-native-scaling-drawer';
 import CategoriesName from "../Categories/CategoriesName";
-
+import Headline from "../Components/Headline";
+import LeftMenu from "../Components/LeftMenu";
+import PageHeader from "../Components/PageHeader";
+export const drawer = createRef();
+const defaultScalingDrawerConfig = {
+  scalingFactor: 0.7,
+  minimizeFactor: 0.7,
+  swipeOffset: 20
+};
 // create a component
 class Home extends Component {
   constructor(props) {
@@ -68,55 +75,57 @@ class Home extends Component {
       });
     }
   };
-async getRequestAxios2(){
-        try{
-            await axios.get('http://bomba32isdunyasi.com/wp-json/wp/v2/categories').then(async(res) => {
-               this.setState({
-                   tabsname : res.data
-               })
-                for (var i = 0; i < this.state.tabsname.length; i++){
-               console.log("Tabs Name", this.state.tabsname[i])
-                }
-            })
-            .catch(async(err) => {
-                console.warn(err);
-            })
-        
-            
-        } catch (error) {
-            console.error(error);
-        }
-
+  async getRequestAxios2() {
+    try {
+      await axios
+        .get("http://bomba32isdunyasi.com/wp-json/wp/v2/categories")
+        .then(async res => {
+          this.setState({
+            tabsname: res.data,
+          });
+          for (var i = 0; i < this.state.tabsname.length; i++) {
+            console.log("Tabs Name", this.state.tabsname[i]);
+          }
+        })
+        .catch(async err => {
+          console.warn(err);
+        });
+    } catch (error) {
+      console.error(error);
     }
+  }
 
-    renderTabsname = () => {
-        var tabsname = this.state.tabsname;
-        if ( tabsname ) {
-            return tabsname.map((data,index) => {
-                return (
-                    <CategoriesName id={data.id} name={data.name} />
-                    
-                )
-            })
-        }
+  renderTabsname = () => {
+    var tabsname = this.state.tabsname;
+    if (tabsname) {
+      return tabsname.map((data, index) => {
+        return <CategoriesName id={data.id} name={data.name} />;
+      });
     }
+  };
   render() {
     return (
+       <ScalingDrawer
+        ref={drawer}
+        content={<LeftMenu drawer={drawer} />}
+        {...defaultScalingDrawerConfig}
+        onClose={() => console.log('close')}
+        onOpen={() => console.log('open')}
+      >
       <Container style={styles.container}>
-      <Content>  
-        <PageHeader />
-        <View>
-          <ScrollView horizontal={true} showHorizontalIndicator={false}>
-            {this.renderHeadline()}
-          </ScrollView>
-        </View>
-        <View>
-         <ScrollView horizontal={true}>
-          {this.renderTabsname()}
+        <Content>
+          <PageHeader openDrawer={()  => drawer.current.open() } />
+          <View>
+            <ScrollView horizontal={true} showHorizontalIndicator={false}>
+              {this.renderHeadline()}
             </ScrollView>
-        </View>
-         </Content>
+          </View>
+          <View>
+            <ScrollView horizontal={true}>{this.renderTabsname()}</ScrollView>
+          </View>
+        </Content>
       </Container>
+    </ScalingDrawer>  
     );
   }
 }
@@ -124,7 +133,7 @@ async getRequestAxios2(){
 // define your styles
 const styles = StyleSheet.create({
   container: {
-    flex:1,
+    flex: 1,
     justifyContent: "center",
     alignItems: "center",
     backgroundColor: "#fff",
