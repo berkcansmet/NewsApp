@@ -20,6 +20,9 @@ class Detay extends Component {
   constructor(props) {
     super(props);
     this.state = {
+      isloading: true,
+      post: [],
+      already_bookmark: false,
       liked: false,
     };
     console.log("DETAIL", this.props.img);

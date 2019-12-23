@@ -20,7 +20,7 @@ class Home extends Component {
     super(props);
     this.state = {
       headline: null,
-      images: null,
+      detail: null,
       tabsname: null,
     };
 
@@ -83,9 +83,8 @@ class Home extends Component {
           this.setState({
             tabsname: res.data,
           });
-          for (var i = 0; i < this.state.tabsname.length; i++) {
-            console.log("Tabs Name", this.state.tabsname[i]);
-          }
+          console.log("TABSNAME", this.state.tabsname);
+           this.getDetail();
         })
         .catch(async err => {
           console.warn(err);
@@ -95,11 +94,23 @@ class Home extends Component {
     }
   }
 
+   getDetail = async () => {
+    axios
+      .get
+      ("http://bomba32isdunyasi.com/wp-json/wp/v2/posts?categories")
+      .then(async res => {
+        this.setState({
+          detail: res.data,
+        });
+        console.log("DETAİL", this.state.detail);
+      });
+  };
   renderTabsname = () => {
     var tabsname = this.state.tabsname;
-    if (tabsname) {
+    var detail = this.state.detail;
+    if (tabsname && detail) {
       return tabsname.map((data, index) => {
-        return <CategoriesName id={data.id} name={data.name} />;
+        return <CategoriesName key={index} tabsnameid={data.id} tabsname ={data.name} />;
       });
     }
   };

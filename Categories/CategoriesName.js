@@ -10,8 +10,7 @@ class CategoriesName extends Component {
     super(props);
     this.state = {
       name: null,
-      images: null,
-      name2 : null,
+      img:null,
     };
 
     this.getReqestAxios();
@@ -20,19 +19,15 @@ class CategoriesName extends Component {
   async getReqestAxios() {
     try {
       await axios
-        .get(
-          "http://bomba32isdunyasi.com/wp-json/wp/v2/posts?categories="+ this.props.id)
+        .get
+          ("http://bomba32isdunyasi.com/wp-json/wp/v2/posts?categories=151")
         .then(async res => {
            
           this.setState({
             name: res.data,
-            name2: res.data[0].id
-          });
-            
-            console.log("Tabs Name", this.state.name2);
-            
-          this.getMedias();
-        })
+          })
+             this.getImage();
+      })
         .catch(async err => {
           console.warn(err);
         });
@@ -40,29 +35,28 @@ class CategoriesName extends Component {
       console.error(error);
     }
   }
-
-  getMedias = async () => {
+  getImage = async () => {
     axios
-      .get("http://bomba32isdunyasi.com/wp-json/wp/v2/media?parent=" + this.state.name2)
+      .get
+      ("http://bomba32isdunyasi.com/wp-json/wp/v2/media?parent=8856")
       .then(async res => {
         this.setState({
-          images: res.data,
+          img: res.data,
         });
       });
   };
 
+
   renderName = () => {
     var name = this.state.name;
-    var name2 = this.state.name2;
-    var images = this.state.images;
-    if (name && name2 && images) {
+    var img = this.state.img;
+    if (name && img) {
       return name.map((data, index) => {
-        console.log("IMg", images);
+        console.log("IMg", img);
         return (
           <CategoriesTab
             key={index}
             id={data.id}
-            img={data.guid.rendered}
             detail={data.content.rendered}
             title={data.title.rendered}
             date={data.date}
@@ -75,8 +69,8 @@ class CategoriesName extends Component {
     return (
       <Container>
         <Tabs renderTabBar={() => <ScrollableTab />}>
-          <Tab heading={this.props.name}>
-            <CategoriesTab>{this.renderName()}</CategoriesTab>
+          <Tab heading={this.props.tabsname}>
+          <CategoriesTab> {this.renderName()}</CategoriesTab>
           </Tab>
         </Tabs>
       </Container>

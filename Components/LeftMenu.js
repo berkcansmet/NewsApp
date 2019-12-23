@@ -1,14 +1,15 @@
 import React, { Component } from 'react';
 import { View, Text, StyleSheet,TouchableOpacity} from 'react-native';
 import { Container, Header, Content, List, ListItem, Left, Right, Icon,Thumbnail } from 'native-base';
-import {Actions} from 'react-native-router-flux'
+import {Actions} from 'react-native-router-flux';
+
 
 class LeftMenu extends Component {
     render() {
         return (
             <Content style={styles.container}>
                 <View style={styles.header}>
-                    <TouchableOpacity onPress={() => Actions.Profil()}>
+                    <TouchableOpacity>
                         <Thumbnail style={styles.thumbnail}
                             source={{ uri: 'https://images.unsplash.com/photo-1537815749002-de6a533c64db?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=545&q=80' }}
                             large
@@ -19,7 +20,8 @@ class LeftMenu extends Component {
                  <Content>
           <List>
             <ListItem selected>
-              <TouchableOpacity>
+              <TouchableOpacity  onPress={() =>
+                  Actions.Bookmark()}>
                 <Text style={styles.Text}>Bookmark</Text>
               </TouchableOpacity>
             </ListItem>
