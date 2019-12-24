@@ -1,26 +1,25 @@
-import React, { Component } from 'react';
+import React, { Component } from "react";
 import {
   View,
   Text,
   StyleSheet,
   ImageBackground,
   Dimensions,
-  TouchableOpacity,
 } from "react-native";
 import { Fonts } from "../Helpers/Fonts";
 
 class CategoriesTab extends Component {
   render() {
     return (
-        <ImageBackground
-          style={styles.ImageBackground}
-          source={{ uri: this.props.img }}
-        >
-          <View style={styles.Headline}>
-            <Text style={styles.Text}>{this.props.title}</Text>
-          </View>
-        </ImageBackground>
-    )
+      <ImageBackground
+        style={styles.ImageBackground}
+        source={{ uri: this.props.img }}
+      >
+        <View style={styles.Headline}>
+          <Text style={styles.Text}>berkcan</Text>
+        </View>
+      </ImageBackground>
+    );
   }
 }
 

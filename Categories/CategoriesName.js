@@ -1,6 +1,6 @@
 //import liraries
 import axios from "axios";
-import { Container, Tab, Tabs, ScrollableTab } from "native-base";
+import { Container, Tab, Tabs } from "native-base";
 import React, { Component } from "react";
 import { StyleSheet } from "react-native";
 import CategoriesTab from "./CategoriesTab";
@@ -10,7 +10,7 @@ class CategoriesName extends Component {
     super(props);
     this.state = {
       name: null,
-      img:null,
+      img: null,
     };
 
     this.getReqestAxios();
@@ -19,15 +19,15 @@ class CategoriesName extends Component {
   async getReqestAxios() {
     try {
       await axios
-        .get
-          ("http://bomba32isdunyasi.com/wp-json/wp/v2/posts?categories=151")
+        .get( 
+          "http://bomba32isdunyasi.com/wp-json/wp/v2/posts?categories="
+        )
         .then(async res => {
-           
           this.setState({
             name: res.data,
-          })
-             this.getImage();
-      })
+          });
+          this.getImage();
+        })
         .catch(async err => {
           console.warn(err);
         });
@@ -37,8 +37,7 @@ class CategoriesName extends Component {
   }
   getImage = async () => {
     axios
-      .get
-      ("http://bomba32isdunyasi.com/wp-json/wp/v2/media?parent=8856")
+      .get("http://bomba32isdunyasi.com/wp-json/wp/v2/media?parent=8856")
       .then(async res => {
         this.setState({
           img: res.data,
@@ -46,13 +45,13 @@ class CategoriesName extends Component {
       });
   };
 
-
   renderName = () => {
     var name = this.state.name;
     var img = this.state.img;
     if (name && img) {
       return name.map((data, index) => {
         console.log("IMg", img);
+        console.log("POST", name);
         return (
           <CategoriesTab
             key={index}
@@ -67,23 +66,27 @@ class CategoriesName extends Component {
   };
   render() {
     return (
-      <Container>
-        <Tabs renderTabBar={() => <ScrollableTab />}>
+      <Container style={styles.container}>
+        <Tabs>
           <Tab heading={this.props.tabsname}>
-          <CategoriesTab> {this.renderName()}</CategoriesTab>
+          <Text>asddsadasdas</Text>
           </Tab>
         </Tabs>
       </Container>
     );
   }
 }
-
 // define your styles
 const styles = StyleSheet.create({
   container: {
     justifyContent: "center",
     alignItems: "center",
     backgroundColor: "red",
+  },
+  tab: {
+    justifyContent: "space-between",
+    alignItems: "center",
+    flexDirection: "row",
   },
 });
 

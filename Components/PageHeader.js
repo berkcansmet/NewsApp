@@ -14,7 +14,7 @@ class PageHeader extends Component {
     return (
       <View style={styles.container}>
         <View>
-          <TouchableOpacity onPress={() => this.props.openDrawer() }>
+          <TouchableOpacity onPress={() => this.props.openDrawer()}>
             <Icon name="bars" size={20} />
           </TouchableOpacity>
         </View>

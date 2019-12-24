@@ -2,9 +2,9 @@
 import React, { Component } from "react";
 import { StyleSheet } from "react-native";
 import { Router, Stack, Scene } from "react-native-router-flux";
+import Bookmark from "./Screen/Bookmark";
 import Detail from "./Screen/Detail";
 import Home from "./Screen/Home";
-import Bookmark from "./Screen/Bookmark"
 // create a component
 class App extends Component {
   render() {
@@ -13,7 +13,12 @@ class App extends Component {
         <Stack key="root">
           <Scene key="Home" component={Home} title="Home" hideNavBar />
           <Scene key="Detail" component={Detail} title="Detail" hideNavBar />
-          <Scene key="Bookmark" component={Bookmark} title="Bookmark" hideNavBar/>
+          <Scene
+            key="Bookmark"
+            component={Bookmark}
+            title="Bookmark"
+            hideNavBar
+          />
         </Stack>
       </Router>
     );
