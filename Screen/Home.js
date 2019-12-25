@@ -1,8 +1,19 @@
 //import liraries
 import axios from "axios";
-import { Container, Content, Tab, Tabs } from "native-base";
+import {
+  Container,
+  Content,
+  List,
+  ListItem,
+  Thumbnail,
+  Left,
+  Body,
+  Right,
+  Button,
+} from "native-base";
 import React, { Component, createRef } from "react";
 import { View, StyleSheet, ScrollView, Text } from "react-native";
+import MaterialTabs from "react-native-material-tabs";
 import ScalingDrawer from "react-native-scaling-drawer";
 import Headline from "../Components/Headline";
 import LeftMenu from "../Components/LeftMenu";
@@ -21,8 +32,11 @@ class Home extends Component {
     this.state = {
       headline: null,
       detail: null,
-      tabsitemname: null,
+      categories: null,
+      categoriesitemname2: null,
       categoriesnews: null,
+      selectedIndex: 0,
+      categoryArr: [],
     };
 
     this.getReqestAxios();
@@ -62,7 +76,7 @@ class Home extends Component {
     var images = this.state.images;
     if (headline && images) {
       return headline.map((data, index) => {
-        console.log("IMAGES", images);
+        //console.log("IMAGES", images);
         return (
           <Headline
             key={index}
@@ -82,31 +96,86 @@ class Home extends Component {
         .get("http://bomba32isdunyasi.com/wp-json/wp/v2/categories")
         .then(async res => {
           this.setState({
-            tabsitemname: res.data,
-            categoriesnews: res.data[0].id
+            categories: res.data,
           });
-          this.get(categoriesnews) = cat_id
+          console.log("Cat", this.state.categories);
+          this.getCategoriesNews(res.data[0].id);
         })
         .catch(async err => {
           console.warn(err);
         });
+      if (this.state.categories) {
+        this.state.categories.map((data, index) => {
+          this.setState({
+            categoryArr: [...this.state.categoryArr, data.name],
+          });
+        });
+      }
     } catch (error) {
       console.error(error);
     }
   }
-  rendertabsitemname = () => {
-    var tabsitemname = this.state.tabsitemname;
-    if (tabsitemname) {
-      return tabsitemname.map((data, index) => {
-        console.log("NAMe", data);
+  getCategoriesNews = async cat_id => {
+    axios
+      .get(
+        "http://bomba32isdunyasi.com/wp-json/wp/v2/posts?categories=" + cat_id
+      )
+      .then(async res => {
+        this.setState({
+          categoriesnews: res.data,
+        });
+        this.getNewsImg(res.data[0].id);
+        console.log("berkcan", data[0].id);
+      });
+  };
+  getNewsImg = async kat_id => {
+    axios
+      .get("http://bomba32isdunyasi.com/wp-json/wp/v2/posts?parent=" + kat_id)
+      .then(async res => {
+        this.setState({
+          newsimg: res.data,
+        });
+      });
+  };
+
+  renderCategoriesNews = () => {
+    var categoriesnews = this.state.categoriesnews;
+    var newsimg = this.state.newsimg;
+    if (categoriesnews && newsimg) {
+      return categoriesnews.map((data, index) => {
+        console.log("HABER", data.title.rendered);
+        console.log("resim", newsimg);
         return (
-          <Tab heading="asdasdadsdada">
-            <Text>{data.name}</Text>
-          </Tab>
+          <List>
+            <ListItem thumbnail>
+              <Left>
+                <Thumbnail square source={{ uri: data.source_url }} />
+              </Left>
+              <Body>
+                <Text>{data.title.rendered}</Text>
+              </Body>
+              <Right>
+                <Button transparent>
+                  <Text>D E T A Y</Text>
+                </Button>
+              </Right>
+            </ListItem>
+          </List>
         );
       });
     }
   };
+
+  onChangeCat = index => {
+    this.setState({
+      selectedIndex: index,
+    });
+    var catid = this.state.categories[index].id;
+    this.getCategoriesNews(catid);
+    var katid = this.state.newsimg[index].id;
+    this.getNewsImg(katid);
+  };
+
   render() {
     return (
       <ScalingDrawer
@@ -124,9 +193,18 @@ class Home extends Component {
                 {this.renderHeadline()}
               </ScrollView>
             </View>
-            <View>
-              {this.state.tabsitemname && <Tabs> {this.rendertabsitemname()} </Tabs>}
-            </View>
+            {this.state.categoryArr.length > 0 && (
+              <MaterialTabs
+                items={this.state.categoryArr}
+                selectedIndex={this.state.selectedIndex}
+                onChange={index => this.onChangeCat(index)}
+                barColor="#1fbcd2"
+                indicatorColor="#fffe94"
+                activeTextColor="white"
+                scrollable={true}
+              />
+            )}
+            {this.renderCategoriesNews()}
           </Content>
         </Container>
       </ScalingDrawer>
