@@ -2,7 +2,7 @@
 import React, { Component } from 'react';
 import { View, Text, StyleSheet } from 'react-native';
 import TopHeader from '../Components/TopHeader';
-// create a component
+import AsyncStorage from '@react-native-community/async-storage';
 class Bookmark extends Component {
     render() {
         return (

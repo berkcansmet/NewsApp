@@ -18,6 +18,7 @@ import ScalingDrawer from "react-native-scaling-drawer";
 import Headline from "../Components/Headline";
 import LeftMenu from "../Components/LeftMenu";
 import PageHeader from "../Components/PageHeader";
+import NetInfo from "@react-native-community/netinfo";
 
 export const drawer = createRef();
 const defaultScalingDrawerConfig = {
@@ -41,6 +42,10 @@ class Home extends Component {
 
     this.getReqestAxios();
     this.getRequestAxios2();
+    const unsubscribe = NetInfo.addEventListener(state => {
+    console.log("Connection type", state.type);
+    console.log("Is connected?", state.isConnected);
+});
   }
 
   async getReqestAxios() {

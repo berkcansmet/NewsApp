@@ -20,9 +20,6 @@ class Detay extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      isloading: true,
-      post: [],
-      already_bookmark: false,
       liked: false,
     };
     console.log("DETAIL", this.props.img);
@@ -47,7 +44,7 @@ class Detay extends Component {
               <Icon name="calendar" size={30} />
               <Time time={this.props.date} />
             </View>
-            <TouchableOpacity onPress={this.likeImage}>
+            <TouchableOpacity onPress={this.likeImage }>
               <Right>
                 <Icon name="bookmark" size={40} color={colorValue} />
               </Right>
