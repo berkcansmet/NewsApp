@@ -8,6 +8,7 @@ import Home from "./Screen/Home";
 // create a component
 class App extends Component {
   render() {
+    console. disableYellowBox = true;
     return (
       <Router>
         <Stack key="root">

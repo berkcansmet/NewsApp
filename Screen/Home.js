@@ -12,12 +12,22 @@ import {
   Button,
 } from "native-base";
 import React, { Component, createRef } from "react";
-import { View, StyleSheet, ScrollView, Text } from "react-native";
+import {
+  View,
+  StyleSheet,
+  ScrollView,
+  Text,
+  Dimensions,
+  BackHandler,
+} from "react-native";
 import MaterialTabs from "react-native-material-tabs";
+import Modal from "react-native-modal";
 import ScalingDrawer from "react-native-scaling-drawer";
 import Headline from "../Components/Headline";
 import LeftMenu from "../Components/LeftMenu";
 import PageHeader from "../Components/PageHeader";
+
+import { Fonts } from "../Helpers/Fonts";
 import NetInfo from "@react-native-community/netinfo";
 
 export const drawer = createRef();
@@ -38,14 +48,21 @@ class Home extends Component {
       categoriesnews: null,
       selectedIndex: 0,
       categoryArr: [],
+      modalVisible: false,
+      netAlert: false,
     };
 
     this.getReqestAxios();
     this.getRequestAxios2();
     const unsubscribe = NetInfo.addEventListener(state => {
-    console.log("Connection type", state.type);
-    console.log("Is connected?", state.isConnected);
-});
+      if (state.isConnected == false) {
+        this.setState({ netAlert: true });
+      } else {
+        this.setState({ netAlert: false });
+      }
+      console.log("Connection type", state.type);
+      console.log("Is connected?", state.isConnected);
+    });
   }
 
   async getReqestAxios() {
@@ -194,6 +211,28 @@ class Home extends Component {
           <Content>
             <PageHeader openDrawer={() => drawer.current.open()} />
             <View>
+              <Modal
+                animationType="slide"
+                transparent={true}
+                isVisible={this.state.netAlert}
+              >
+                <View style={styles.modal}>
+                  <Text style={styles.modaltext}> BAĞLANTI HATASI </Text>
+                  <Text style={styles.modaltext2}>
+                    İnternet Bağlatınızı kontrol ediniz !
+                  </Text>
+                  <Text style={styles.modaltext2}>
+                    Bağlatınızı sağladıktan sonra tekrar giriş yapabilirsiniz.
+                  </Text>
+                </View>
+                <View>
+                  <Button full dark onPress={() => BackHandler.exitApp()}>
+                    <Text style={styles.buttontext}>T A M A M</Text>
+                  </Button>
+                </View>
+              </Modal>
+            </View>
+            <View>
               <ScrollView horizontal={true} showHorizontalIndicator={false}>
                 {this.renderHeadline()}
               </ScrollView>
@@ -227,6 +266,29 @@ const styles = StyleSheet.create({
   },
   tab: {
     justifyContent: "space-between",
+  },
+  modal: {
+    backgroundColor: "#DAD9D9",
+    width: "100%",
+    height: Dimensions.get("window").height / 4,
+  },
+  modaltext: {
+    marginTop: 10,
+    fontSize: 30,
+    textAlign: "center",
+    fontFamily: Fonts.Bold,
+  },
+  modaltext2: {
+    marginTop: 20,
+    fontSize: 20,
+    textAlign: "center",
+    fontFamily: Fonts.Regular,
+  },
+  buttontext: {
+    fontSize: 20,
+    textAlign: "center",
+    fontFamily: Fonts.Bold,
+    color: "white",
   },
 });
 
