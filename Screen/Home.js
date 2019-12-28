@@ -50,6 +50,7 @@ class Home extends Component {
       categoryArr: [],
       modalVisible: false,
       netAlert: false,
+      isLoding: true,
     };
 
     this.getReqestAxios();

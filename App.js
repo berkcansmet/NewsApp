@@ -5,6 +5,7 @@ import { Router, Stack, Scene } from "react-native-router-flux";
 import Bookmark from "./Screen/Bookmark";
 import Detail from "./Screen/Detail";
 import Home from "./Screen/Home";
+import Comment from "./Screen/Comment"
 // create a component
 class App extends Component {
   render() {
@@ -19,6 +20,12 @@ class App extends Component {
             component={Bookmark}
             title="Bookmark"
             hideNavBar
+          />
+          <Scene
+          key="Comment"
+          component={Comment}
+          title="Comment"
+          hideNavBar
           />
         </Stack>
       </Router>

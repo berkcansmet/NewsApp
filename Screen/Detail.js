@@ -9,11 +9,14 @@ import {
   Dimensions,
   TouchableOpacity,
   ScrollView,
+  AsyncStorage
 } from "react-native";
+import { Actions } from "react-native-router-flux";
 import HTMLView from "react-native-htmlview";
 import Icon from "react-native-vector-icons/FontAwesome";
 import TopHeader from "../Components/TopHeader";
 import Time from "../Helpers/Time";
+import Comment from "./Comment"
 
 // create a component
 class Detay extends Component {
@@ -21,12 +24,14 @@ class Detay extends Component {
     super(props);
     this.state = {
       liked: false,
+      alreadyBookmark: false,
     };
     console.log("DETAIL", this.props.img);
   }
   likeImage = async () => {
     const likeState = await !this.state.liked;
     this.setState({ liked: likeState });
+    console.log("berkcannnn",likeState )
   };
 
   render() {
@@ -44,7 +49,12 @@ class Detay extends Component {
               <Icon name="calendar" size={30} />
               <Time time={this.props.date} />
             </View>
-            <TouchableOpacity onPress={this.likeImage }>
+             <TouchableOpacity onPress={()=> Actions.Comment() }>
+            <View>
+             <Icon name="commenting-o" size={30} color="grey"/>
+            </View>
+            </TouchableOpacity>
+            <TouchableOpacity onPress={this.likeImage, this.saveData }>
               <Right>
                 <Icon name="bookmark" size={40} color={colorValue} />
               </Right>
@@ -58,6 +68,9 @@ class Detay extends Component {
         </Content>
       </View>
     );
+  }
+  saveData(){
+    aler("test")
   }
 }
 
