@@ -156,7 +156,7 @@ class Home extends Component {
       .get("http://bomba32isdunyasi.com/wp-json/wp/v2/posts?parent=" + kat_id)
       .then(async res => {
         this.setState({
-          newsimg: res.data,
+          newsimg: res.data[0].id
         });
       });
   };

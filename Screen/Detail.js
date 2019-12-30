@@ -9,14 +9,14 @@ import {
   Dimensions,
   TouchableOpacity,
   ScrollView,
-  AsyncStorage
 } from "react-native";
-import { Actions } from "react-native-router-flux";
 import HTMLView from "react-native-htmlview";
+import { Actions } from "react-native-router-flux";
 import Icon from "react-native-vector-icons/FontAwesome";
 import TopHeader from "../Components/TopHeader";
 import Time from "../Helpers/Time";
-import Comment from "./Comment"
+import Comment from "./Comment";
+import AsyncStorage from "@react-native-community/async-storage";
 
 // create a component
 class Detay extends Component {
@@ -25,18 +25,34 @@ class Detay extends Component {
     this.state = {
       liked: false,
       alreadyBookmark: false,
+      bookmarks: [],
     };
     console.log("DETAIL", this.props.img);
   }
-  likeImage = async () => {
+
+  componentWillMount = async () => {
+  //  await AsyncStorage.removeItem("bookmarks");
+  };
+
+  likeImage = async post_id => {
     const likeState = await !this.state.liked;
     this.setState({ liked: likeState });
-    console.log("berkcannnn",likeState )
+    console.log("berkcannnn", likeState);
+    this.setState({ likeState: true });
+    if ((await AsyncStorage.getItem("bookmarks")) == null) {
+      AsyncStorage.setItem("bookmarks", JSON.stringify([post_id]));
+    } else {
+      var bookmarks = JSON.parse(await AsyncStorage.getItem("bookmarks"));
+      bookmarks.push(post_id);
+      AsyncStorage.setItem("bookmarks", JSON.stringify(bookmarks));
+    }
+
+    console.log(await AsyncStorage.getItem("bookmarks"));
   };
 
   render() {
     const { liked } = this.state;
-    const colorValue = liked ? "black" : "#EEEDED";
+    const ıconValue = liked ? "bookmark" : "bookmark-o";
 
     return (
       <View style={styles.container}>
@@ -49,14 +65,14 @@ class Detay extends Component {
               <Icon name="calendar" size={30} />
               <Time time={this.props.date} />
             </View>
-             <TouchableOpacity onPress={()=> Actions.Comment() }>
-            <View>
-             <Icon name="commenting-o" size={30} color="grey"/>
-            </View>
+            <TouchableOpacity onPress={() => Actions.Comment()}>
+              <View>
+                <Icon name="commenting-o" size={30} color="grey" />
+              </View>
             </TouchableOpacity>
-            <TouchableOpacity onPress={this.likeImage, this.saveData }>
+            <TouchableOpacity onPress={() => this.likeImage(this.props.id)}>
               <Right>
-                <Icon name="bookmark" size={40} color={colorValue} />
+                <Icon name={ıconValue} size={40} />
               </Right>
             </TouchableOpacity>
           </View>
@@ -68,9 +84,6 @@ class Detay extends Component {
         </Content>
       </View>
     );
-  }
-  saveData(){
-    aler("test")
   }
 }
 
