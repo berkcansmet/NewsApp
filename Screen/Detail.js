@@ -43,7 +43,9 @@ class Detay extends Component {
       AsyncStorage.setItem("bookmarks", JSON.stringify([post_id]));
     } else {
       var bookmarks = JSON.parse(await AsyncStorage.getItem("bookmarks"));
+      if(bookmarks !== post_id){
       bookmarks.push(post_id);
+      } 
       AsyncStorage.setItem("bookmarks", JSON.stringify(bookmarks));
     }
 

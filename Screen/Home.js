@@ -3,7 +3,6 @@ import axios from "axios";
 import {
   Container,
   Content,
-  List,
   ListItem,
   Thumbnail,
   Left,
@@ -19,14 +18,15 @@ import {
   Text,
   Dimensions,
   BackHandler,
+  TouchableOpacity,
 } from "react-native";
 import MaterialTabs from "react-native-material-tabs";
 import Modal from "react-native-modal";
+import { Actions } from "react-native-router-flux";
 import ScalingDrawer from "react-native-scaling-drawer";
 import Headline from "../Components/Headline";
 import LeftMenu from "../Components/LeftMenu";
 import PageHeader from "../Components/PageHeader";
-
 import { Fonts } from "../Helpers/Fonts";
 import NetInfo from "@react-native-community/netinfo";
 
@@ -47,6 +47,7 @@ class Home extends Component {
       categoriesitemname2: null,
       categoriesnews: null,
       selectedIndex: 0,
+      newsimg: [],
       categoryArr: [],
       modalVisible: false,
       netAlert: false,
@@ -146,44 +147,77 @@ class Home extends Component {
       .then(async res => {
         this.setState({
           categoriesnews: res.data,
+          newsimg: [],
         });
-        this.getNewsImg(res.data[0].id);
-        console.log("berkcan", data[0].id);
+
+        this.getNewsImg();
+        console.log("berkcan", res.data[0].id);
       });
   };
-  getNewsImg = async kat_id => {
-    axios
-      .get("http://bomba32isdunyasi.com/wp-json/wp/v2/posts?parent=" + kat_id)
-      .then(async res => {
-        this.setState({
-          newsimg: res.data[0].id
-        });
-      });
+  getNewsImg = async () => {
+    if (this.state.categoriesnews) {
+      for (var i = 0; i < this.state.categoriesnews.length; i++) {
+        axios
+          .get(
+            "http://bomba32isdunyasi.com/wp-json/wp/v2/media?parent=" +
+              this.state.categoriesnews[i].id
+          )
+          .then(async res => {
+            this.setState({
+              newsimg: [...this.state.newsimg, res.data],
+            });
+            console.log("123132", res.data);
+          });
+      }
+    }
   };
 
   renderCategoriesNews = () => {
     var categoriesnews = this.state.categoriesnews;
     var newsimg = this.state.newsimg;
-    if (categoriesnews && newsimg) {
+    if (categoriesnews && newsimg.length == categoriesnews.length) {
+      console.log("eftal", newsimg);
       return categoriesnews.map((data, index) => {
         console.log("HABER", data.title.rendered);
-        console.log("resim", newsimg);
+        console.log("resim", newsimg[0]);
         return (
-          <List>
+          <TouchableOpacity
+            onPress={() =>
+              Actions.Detail({
+                id: data.id,
+                title: data.title.rendered,
+                img: newsimg[index][0].source_url,
+                detail: data.content.rendered,
+                date: data.date,
+              })}
+          >
             <ListItem thumbnail>
               <Left>
-                <Thumbnail square source={{ uri: data.source_url }} />
+                <Thumbnail
+                  square
+                  source={{ uri: newsimg[index][0].source_url }}
+                />
               </Left>
               <Body>
                 <Text>{data.title.rendered}</Text>
               </Body>
               <Right>
-                <Button transparent>
+                <Button
+                  transparent
+                  onPress={() =>
+                    Actions.Detail({
+                      id: data.id,
+                      title: data.title.rendered,
+                      img: newsimg[index][0].source_url,
+                      detail: data.content.rendered,
+                      date: data.date,
+                    })}
+                >
                   <Text>D E T A Y</Text>
                 </Button>
               </Right>
             </ListItem>
-          </List>
+          </TouchableOpacity>
         );
       });
     }
@@ -195,8 +229,6 @@ class Home extends Component {
     });
     var catid = this.state.categories[index].id;
     this.getCategoriesNews(catid);
-    var katid = this.state.newsimg[index].id;
-    this.getNewsImg(katid);
   };
 
   render() {
